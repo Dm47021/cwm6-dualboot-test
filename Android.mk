@@ -176,6 +176,13 @@ LOCAL_SRC_FILES := ors-mount.sh
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)
+LOCAL_MODULE := setup_2ndrom.sh
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES
+LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/sbin
+LOCAL_SRC_FILES := setup_2ndrom.sh
+include $(BUILD_PREBUILT)
+include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := verifier_test.c verifier.c
 

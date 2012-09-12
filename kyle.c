@@ -79,6 +79,40 @@ void show_darkside_menu() {
     }
 }
 
+void show_dualboot_menu() {
+    static char* headers[] = {  "Dualboot Menu",
+                                "",
+                                NULL
+    };
+
+    char* list[] = { "enable main rom",
+        "enable 2ndrom",
+	"setup sdcard for 2ndrom (wipe)",
+        NULL
+    };
+
+    int chosen_item = get_menu_selection(headers, list, 0, 0);
+    switch (chosen_item) {
+        case 0:
+		ensure_path_mounted("/emmc");
+		__system("dd if=/dev/block/mmcblk0p8 of=/emmc/clockworkmod/dualboot/2ndrom/boot.img");
+		__system("dd if=/emmc/clockworkmod/dualboot/main/boot.img of=/dev/block/mmcblk0p8");
+		__system("cp /etc/recovery.fstab.main /etc/fstab");
+                break;
+        case 1:
+		ensure_path_mounted("/emmc");
+		__system("dd if=/dev/block/mmcblk0p8 of=/emmc/clockworkmod/dualboot/main/boot.img");
+		if( access( "/emmc/clockworkmod/dualboot/2ndrom/boot.img", F_OK ) = 0) {
+		    __system("dd if=/emmc/clockworkmod/dualboot/2ndrom/boot.img of=/dev/block/mmcblk0p8");
+		}
+		__system("cp /etc/recovery.fstab.2ndrom /etc/fstab");
+                break;
+	case 2:
+		__system("setup_2ndrom.sh");
+		break;
+    }
+}
+
 void show_efs_menu() {
     static char* headers[] = {  "EFS Tools",
                                 "",
@@ -401,6 +435,7 @@ void show_extras_menu()
 			    "/efs tools",
 			    "create custom zip",
 			    "run custom openrecoveryscript",
+			    "dualboot menu",
 			    "recovery info",
                             NULL
     };
@@ -491,9 +526,12 @@ void show_extras_menu()
 		show_custom_ors_menu("/emmc");
 		break;
 	    case 8:
+		show_dualboot_menu();
+		break;
+	    case 9:
 		ui_print("ClockworkMod Recovery 6.0.1.3 Touch v13\n");
 		ui_print("Created By: sk8erwitskil (Kyle Laplante)\n");
-		ui_print("Build Date: 09/11/2012 6:47 pm\n");
+		ui_print("Build Date: 09/05/2012 6:23 pm\n");
 	}
     }
 }
