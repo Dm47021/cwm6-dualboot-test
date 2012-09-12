@@ -97,15 +97,15 @@ void show_dualboot_menu() {
 		ensure_path_mounted("/emmc");
 		__system("dd if=/dev/block/mmcblk0p8 of=/emmc/clockworkmod/dualboot/2ndrom/boot.img");
 		__system("dd if=/emmc/clockworkmod/dualboot/main/boot.img of=/dev/block/mmcblk0p8");
-		__system("cp /etc/recovery.fstab.main /etc/fstab");
+		__system("cp /sbin/recovery.fstab.main /etc/fstab");
                 break;
         case 1:
 		ensure_path_mounted("/emmc");
 		__system("dd if=/dev/block/mmcblk0p8 of=/emmc/clockworkmod/dualboot/main/boot.img");
-		if( access( "/emmc/clockworkmod/dualboot/2ndrom/boot.img", F_OK ) = 0) {
+		if( access( "/emmc/clockworkmod/dualboot/2ndrom/boot.img", F_OK ) == 0) {
 		    __system("dd if=/emmc/clockworkmod/dualboot/2ndrom/boot.img of=/dev/block/mmcblk0p8");
 		}
-		__system("cp /etc/recovery.fstab.2ndrom /etc/fstab");
+		__system("cp /sbin/recovery.fstab.2ndrom /etc/fstab");
                 break;
 	case 2:
 		__system("setup_2ndrom.sh");
