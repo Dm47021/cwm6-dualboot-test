@@ -95,17 +95,24 @@ void show_dualboot_menu() {
     switch (chosen_item) {
         case 0:
 		ensure_path_mounted("/emmc");
+		ui_print("backing up 2ndrom and restoring main rom...\n");
 		__system("dd if=/dev/block/mmcblk0p8 of=/emmc/clockworkmod/dualboot/2ndrom/boot.img");
 		__system("dd if=/emmc/clockworkmod/dualboot/main/boot.img of=/dev/block/mmcblk0p8");
-		__system("cp /sbin/recovery.fstab.main /etc/fstab");
+		__system("dd if=/emmc/clockworkmod/dualboot/main/recovery.img of=/dev/block/mmcblk0p22");
+		ui_print("rebooting back into recovery...\n");
+                android_reboot(ANDROID_RB_RESTART2, 0, "recovery");
                 break;
         case 1:
 		ensure_path_mounted("/emmc");
+		ui_print("backing up main rom...\n");
 		__system("dd if=/dev/block/mmcblk0p8 of=/emmc/clockworkmod/dualboot/main/boot.img");
 		if( access( "/emmc/clockworkmod/dualboot/2ndrom/boot.img", F_OK ) == 0) {
+		    ui_print("restoring 2ndrom...\n");
 		    __system("dd if=/emmc/clockworkmod/dualboot/2ndrom/boot.img of=/dev/block/mmcblk0p8");
 		}
-		__system("cp /sbin/recovery.fstab.2ndrom /etc/fstab");
+		__system("dd if=/emmc/clockworkmod/dualboot/2ndrom/recovery.img of=/dev/block/mmcblk0p22");
+		ui_print("rebooting back into recovery....\n");
+                android_reboot(ANDROID_RB_RESTART2, 0, "recovery");
                 break;
 	case 2:
 		__system("setup_2ndrom.sh");
