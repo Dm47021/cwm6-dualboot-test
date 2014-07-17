@@ -35,7 +35,7 @@ else
 RECOVERY_NAME := CWMR Touch
 endif
 
-RECOVERY_VERSION := $(RECOVERY_NAME) v6.0.1.3 _sk8erwitskil_
+RECOVERY_VERSION := $(RECOVERY_NAME) v6.0.1.3 _Osiris_
 
 LOCAL_CFLAGS += -DRECOVERY_VERSION="$(RECOVERY_VERSION)"
 RECOVERY_API_VERSION := 2
@@ -126,6 +126,22 @@ $(RECOVERY_BUSYBOX_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 	$(hide) ln -sf $(BUSYBOX_BINARY) $@
 
 ALL_DEFAULT_INSTALLED_MODULES += $(RECOVERY_BUSYBOX_SYMLINKS) 
+
+#### Make Osiris Recovery more easily portable ####
+
+# Partiton Layout for Osiris Recovery
+ifdef OR_BOOT_DEVICE
+BOOT_PARTITON := /dev/block/$(OR_BOOT_DEVICE)
+endif
+
+ifdef OR_SYSTEM_DEVICE
+SYSTEM_PARTITION := /dev/block/$(OR_SYSTEM_DEVICE)
+endif
+
+ifdef OR_USERDATA_DEVICE
+USERDATA_PARTITION := /dev/block/$(OR_USERDATA_DEVICE)
+endif
+### Osiris Partition layout end 
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := nandroid-md5.sh
